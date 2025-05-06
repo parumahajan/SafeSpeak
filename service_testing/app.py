@@ -1,48 +1,63 @@
-from flask import Flask
-from flask.wrappers import Request
-from requests.models import Response
-from flask import request
-from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
+from flask import Flask, request, jsonify
 import pickle
+import re
+import os
 
 app = Flask(__name__)
 
-def process_msg(msg):
-    if msg == "hi":
-        response = "Hello, Welcome to the cyberbullying detection bot!"
-    else:
-        # print(msg)
-        msg = [msg]
+# Load the model and vectorizer
+model_path = os.path.join('..', 'Code', 'models', 'cyberbullying_model.pkl')
+vectorizer_path = os.path.join('..', 'Code', 'models', 'tfidf_vectorizer.pkl')
+
+with open(model_path, 'rb') as f:
+    model = pickle.load(f)
+with open(vectorizer_path, 'rb') as f:
+    vectorizer = pickle.load(f)
+
+def clean_text(text):
+    # Convert to lowercase
+    text = text.lower()
+    
+    # Keep Hinglish words (Hindi written in English)
+    # Remove only special characters but keep spaces and basic punctuation
+    text = re.sub(r'[^a-zA-Z\s.,!?]', '', text)
+    
+    # Remove extra whitespace
+    text = ' '.join(text.split())
+    return text
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        data = request.get_json()
+        if not data or 'text' not in data:
+            return jsonify({'error': 'No text provided'}), 400
         
-        # List of stopwords 
-        my_file = open("/Users/karan/Desktop/final project demo/service_testing/stopwords.txt", "r")
-        content = my_file.read()
-        content_list = content.split("\n")
-        my_file.close()
+        text = data['text']
+        cleaned_text = clean_text(text)
+        
+        # Transform the text using the vectorizer
+        text_vectorized = vectorizer.transform([cleaned_text])
+        
+        # Get prediction probabilities
+        probabilities = model.predict_proba(text_vectorized)[0]
+        bullying_prob = probabilities[1]  # Probability of bullying class
+        
+        # Only classify as bullying if confidence is high (>0.7)
+        is_bullying = bullying_prob > 0.7
+        
+        result = {
+            'is_bullying': bool(is_bullying),
+            'confidence': float(bullying_prob),
+            'text': text,
+            'cleaned_text': cleaned_text,
+            'message': 'Message contains cyberbullying content' if is_bullying else 'Message is safe'
+        }
+        
+        return jsonify(result)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
-        tfidf_vector = TfidfVectorizer(stop_words = content_list, lowercase = True,vocabulary=pickle.load(open("/Users/karan/Desktop/final project demo/service_testing/tfidf_vector_vocabulary.pkl", "rb")))
-        data=tfidf_vector.fit_transform(msg)
-        print(data)
-        model = pickle.load(open("/Users/karan/Desktop/final project demo/service_testing/LinearSVC.pkl", 'rb'))
-        pred = model.predict(data)
-        response = str(pred[0])
-        print(response)
-        if(response=='1'):
-            response = "Output from my ML Model :- bullying"
-        else:
-            response = "Output from my ML Model :- non-bullying"
-            
-
-    return response 
-
-# Testing for postman
-
-@app.route("/testing", methods = ["POST"])
-def testing():
-    f=request.form 
-    print(f['Body'])
-    msg=f['Body']
-    sender=f['From']
-    print(msg)
-    response = process_msg(msg)
-    return response,200
+if __name__ == '__main__':
+    app.run(debug=True)
