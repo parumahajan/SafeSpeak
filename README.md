@@ -110,7 +110,62 @@ Imagine a chat room where:
 
 ### Common Issues and Solutions
 
-1. **Long Filename Error in Git**
+1. **Git Repository Setup and Push Issues**
+   If you're setting up a new repository or pushing changes:
+
+   a. **Initial Repository Setup**:
+   ```bash
+   # Initialize Git repository
+   git init
+
+   # Add all files
+   git add .
+
+   # Create initial commit
+   git commit -m "Initial commit"
+
+   # Add remote repository
+   git remote add origin https://github.com/yourusername/your-repo.git
+
+   # Create and switch to main branch (modern Git default)
+   git branch -M main
+
+   # Push to remote repository
+   git push -u origin main
+   ```
+
+   b. **If you get "src refspec master does not match any"**:
+   ```bash
+   # Check current branch
+   git branch
+
+   # If no branch exists, create and switch to main
+   git checkout -b main
+
+   # Add and commit your changes
+   git add .
+   git commit -m "Initial commit"
+
+   # Push to remote
+   git push -u origin main
+   ```
+
+   c. **If remote repository already exists**:
+   ```bash
+   # Fetch remote repository
+   git fetch origin
+
+   # Set up tracking
+   git branch --set-upstream-to=origin/main main
+
+   # Pull changes
+   git pull origin main
+
+   # Push your changes
+   git push origin main
+   ```
+
+2. **Long Filename Error in Git**
    If you encounter "Filename too long" errors, try these solutions in order:
 
    a. **User-level configuration** (Recommended):
@@ -135,7 +190,7 @@ Imagine a chat room where:
    echo "    longpaths = true" >> ~/.gitconfig
    ```
 
-2. **Virtual Environment Issues**
+3. **Virtual Environment Issues**
    - If `venv` creation fails, ensure you have the latest pip:
      ```bash
      python -m pip install --upgrade pip
@@ -143,7 +198,7 @@ Imagine a chat room where:
    - If activation fails, try using the full path to the activation script
    - If you get permission errors, try running the command prompt as administrator
 
-3. **Port Already in Use**
+4. **Port Already in Use**
    If port 5000 is already in use:
    ```bash
    # Find the process using the port
@@ -154,7 +209,7 @@ Imagine a chat room where:
    lsof -i :5000
    ```
 
-4. **Model Loading Errors**
+5. **Model Loading Errors**
    - Ensure you're in the correct directory when running scripts
    - Check if model files exist in the correct location
    - Verify file permissions
@@ -219,11 +274,38 @@ CyberBullying-Detection-in-Hinglish-Languages-Using-Machine-Learning-/
 - Test on different browsers
 
 ### Git Workflow
-1. Create a new branch for features
-2. Make atomic commits
-3. Write clear commit messages
-4. Test before pushing
-5. Create pull requests for review
+1. **Initial Setup**:
+   ```bash
+   # Clone the repository
+   git clone https://github.com/yourusername/your-repo.git
+   cd your-repo
+
+   # Create and switch to a new branch
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Regular Development**:
+   ```bash
+   # Update your local repository
+   git pull origin main
+
+   # Make your changes
+   # Add your changes
+   git add .
+
+   # Commit your changes
+   git commit -m "Descriptive message about your changes"
+
+   # Push your changes
+   git push origin feature/your-feature-name
+   ```
+
+3. **Creating Pull Requests**:
+   - Push your feature branch
+   - Go to GitHub repository
+   - Click "Compare & pull request"
+   - Fill in the PR description
+   - Request review from team members
 
 ## Future Improvements
 1. Enhanced model accuracy
