@@ -108,112 +108,6 @@ Imagine a chat room where:
    http://localhost:5000
    ```
 
-### Common Issues and Solutions
-
-1. **Git Repository Setup and Push Issues**
-   If you're setting up a new repository or pushing changes:
-
-   a. **Initial Repository Setup**:
-   ```bash
-   # Initialize Git repository
-   git init
-
-   # Add all files
-   git add .
-
-   # Create initial commit
-   git commit -m "Initial commit"
-
-   # Add remote repository
-   git remote add origin https://github.com/yourusername/your-repo.git
-
-   # Create and switch to main branch (modern Git default)
-   git branch -M main
-
-   # Push to remote repository
-   git push -u origin main
-   ```
-
-   b. **If you get "src refspec master does not match any"**:
-   ```bash
-   # Check current branch
-   git branch
-
-   # If no branch exists, create and switch to main
-   git checkout -b main
-
-   # Add and commit your changes
-   git add .
-   git commit -m "Initial commit"
-
-   # Push to remote
-   git push -u origin main
-   ```
-
-   c. **If remote repository already exists**:
-   ```bash
-   # Fetch remote repository
-   git fetch origin
-
-   # Set up tracking
-   git branch --set-upstream-to=origin/main main
-
-   # Pull changes
-   git pull origin main
-
-   # Push your changes
-   git push origin main
-   ```
-
-2. **Long Filename Error in Git**
-   If you encounter "Filename too long" errors, try these solutions in order:
-
-   a. **User-level configuration** (Recommended):
-   ```bash
-   git config --global core.longpaths true
-   ```
-
-   b. **System-level configuration** (Requires admin rights):
-   ```bash
-   # Run Command Prompt as Administrator, then:
-   git config --system core.longpaths true
-   ```
-
-   c. **Alternative solution** - Create a `.gitconfig` file in your home directory:
-   ```bash
-   # Windows
-   echo [core] > %USERPROFILE%\.gitconfig
-   echo     longpaths = true >> %USERPROFILE%\.gitconfig
-
-   # Linux/Mac
-   echo "[core]" > ~/.gitconfig
-   echo "    longpaths = true" >> ~/.gitconfig
-   ```
-
-3. **Virtual Environment Issues**
-   - If `venv` creation fails, ensure you have the latest pip:
-     ```bash
-     python -m pip install --upgrade pip
-     ```
-   - If activation fails, try using the full path to the activation script
-   - If you get permission errors, try running the command prompt as administrator
-
-4. **Port Already in Use**
-   If port 5000 is already in use:
-   ```bash
-   # Find the process using the port
-   # Windows
-   netstat -ano | findstr :5000
-   
-   # Linux/Mac
-   lsof -i :5000
-   ```
-
-5. **Model Loading Errors**
-   - Ensure you're in the correct directory when running scripts
-   - Check if model files exist in the correct location
-   - Verify file permissions
-   - If you get permission errors, try running as administrator
 
 ## Project Structure
 ```
@@ -273,32 +167,6 @@ CyberBullying-Detection-in-Hinglish-Languages-Using-Machine-Learning-/
 - Check error handling
 - Test on different browsers
 
-### Git Workflow
-1. **Initial Setup**:
-   ```bash
-   # Clone the repository
-   git clone https://github.com/yourusername/your-repo.git
-   cd your-repo
-
-   # Create and switch to a new branch
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Regular Development**:
-   ```bash
-   # Update your local repository
-   git pull origin main
-
-   # Make your changes
-   # Add your changes
-   git add .
-
-   # Commit your changes
-   git commit -m "Descriptive message about your changes"
-
-   # Push your changes
-   git push origin feature/your-feature-name
-   ```
 
 3. **Creating Pull Requests**:
    - Push your feature branch
@@ -323,11 +191,7 @@ CyberBullying-Detection-in-Hinglish-Languages-Using-Machine-Learning-/
 4. Push to the branch
 5. Create a Pull Request
 
-## License
-[Add your license information here]
 
-## Contact
-[Add your contact information here]
 
 
 
